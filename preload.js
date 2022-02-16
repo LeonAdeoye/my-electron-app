@@ -1,3 +1,5 @@
+const { contextBridge } = require('electron')
+
 // Accessing this information is trivial to do in the main process through Node's global process object.
 // However, you can't just edit the DOM from the main process because it has no access to the renderer's
 // document context. They're in entirely different processes!
@@ -17,4 +19,12 @@ window.addEventListener('DOMContentLoaded', () =>
     {
         replaceText(`${dependency}-version`, process.versions[dependency])
     }
+})
+
+// Context Isolation means that preload scripts are isolated from the renderer's main world to avoid
+// leaking any privileged APIs into your web content's code.
+// Instead, use the contextBridge module to accomplish this securely:
+
+contextBridge.exposeInMainWorld('myAPI', {
+    desktop: true
 })

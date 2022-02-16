@@ -28,6 +28,9 @@ const createWindow = () =>
     {
         console.log("index.html file loaded and this extra bit of code resolves the promise.")
     })
+
+    const contents = win.webContents
+    console.log(contents)
 }
 
 // Call this createWindow() function to open your window.
