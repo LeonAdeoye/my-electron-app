@@ -24,6 +24,9 @@ const createWindow = () =>
         }
     })
 
+    // Open the DevTools.
+    win.webContents.openDevTools();
+
     win.loadFile('index.html').then(() =>
     {
         console.log("index.html file loaded and this extra bit of code resolves the promise.")

@@ -25,6 +25,11 @@ window.addEventListener('DOMContentLoaded', () =>
 // leaking any privileged APIs into your web content's code.
 // Instead, use the contextBridge module to accomplish this securely:
 
+// Using a preload script to import Node.js and Electron modules in a context-isolated renderer process.
 contextBridge.exposeInMainWorld('myAPI', {
-    desktop: true
+    desktop: true,
+    doAThing: () =>
+    {
+        console.log("Printing doAThing");
+    }
 })
