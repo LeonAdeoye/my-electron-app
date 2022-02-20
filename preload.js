@@ -32,5 +32,12 @@ contextBridge.exposeInMainWorld('myAPI', {
     // By default, the renderer process has no Node.js or Electron module access.
     // As an app developer, you need to choose which APIs to expose from your preload
     // script using the contextBridge API.
-    setTitle: (title) => ipcRenderer.send('set-title', title)
+    setTitle: (title) => ipcRenderer.send('set-title', title),
+    // A common application for two-way IPC is calling a main process module from your renderer process code
+    // and waiting for a result. This can be done by using ipcRenderer.invoke paired with ipcMain.handle.
+
+    // In the preload script, we expose a one-line openFile function that calls and returns the value of
+    // ipcRenderer.invoke('dialog:openFile'). We'll be using this API in the next step to call the native
+    // dialog from our renderer's user interface.
+    openFile: () => ipcRenderer.invoke('dialog:openFile')
 })

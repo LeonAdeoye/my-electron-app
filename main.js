@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog } = require('electron')
 const path = require('path')
 
 // The entry point of any Electron application is its main script.
@@ -62,6 +62,11 @@ app.whenReady().then(() =>
     // Set an IPC listener on the set-title channel with the ipcMain.on API:
     ipcMain.on('set-title', handleSetTitle)
 
+    // ipcRender.invoke message is sent through the dialog:openFile channel from the renderer process.
+    // The dialog: prefix on the IPC channel name has no effect on the code.
+    // It only serves as a namespace that helps with code readability.
+    ipcMain.handle('dialog:openFile', handleFileOpen)
+
     createWindow()
 
     app.on('activate', () =>
@@ -74,3 +79,16 @@ app.on('window-all-closed', () =>
 {
     if (process.platform !== 'darwin') app.quit()
 })
+
+// In the main process, we'll be creating a handleFileOpen() function that calls dialog.showOpenDialog
+// and returns the value of the file path selected by the user. This function is used as a callback
+// whenever an ipcRender.invoke message is sent through the dialog:openFile channel from the renderer process.
+async function handleFileOpen()
+{
+    const { canceled, filePaths } = await dialog.showOpenDialog()
+    if (canceled) {
+        return
+    } else {
+        return filePaths[0]
+    }
+}
