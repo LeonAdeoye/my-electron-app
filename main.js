@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('path')
 
 // The entry point of any Electron application is its main script.
@@ -33,8 +33,15 @@ const createWindow = () =>
     })
 
     const contents = win.webContents
-    console.log(contents)
 }
+
+// handleSetTitle callback has two parameters: an IpcMainEvent structure and a title string.
+// Whenever a message comes through the set-title channel, this function will be called.
+function handleSetTitle(event, title)
+{
+    console.log("Set title to: " + title)
+}
+
 
 // Call this createWindow() function to open your window.
 // In Electron, browser windows can only be created after the app module's ready event is fired.
@@ -52,6 +59,9 @@ const createWindow = () =>
 
 app.whenReady().then(() =>
 {
+    // Set an IPC listener on the set-title channel with the ipcMain.on API:
+    ipcMain.on('set-title', handleSetTitle)
+
     createWindow()
 
     app.on('activate', () =>

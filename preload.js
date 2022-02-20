@@ -1,4 +1,4 @@
-const { contextBridge } = require('electron')
+const { contextBridge, ipcRenderer } = require('electron')
 
 // Accessing this information is trivial to do in the main process through Node's global process object.
 // However, you can't just edit the DOM from the main process because it has no access to the renderer's
@@ -28,8 +28,9 @@ window.addEventListener('DOMContentLoaded', () =>
 // Using a preload script to import Node.js and Electron modules in a context-isolated renderer process.
 contextBridge.exposeInMainWorld('myAPI', {
     desktop: true,
-    doAThing: () =>
-    {
-        console.log("Printing doAThing");
-    }
+    // To send messages to the listener created above, you can use the ipcRenderer.send API.
+    // By default, the renderer process has no Node.js or Electron module access.
+    // As an app developer, you need to choose which APIs to expose from your preload
+    // script using the contextBridge API.
+    setTitle: (title) => ipcRenderer.send('set-title', title)
 })
