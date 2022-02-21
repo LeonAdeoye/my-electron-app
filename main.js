@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, Menu, globalShortcut } = require('electron')
 const path = require('path')
 
 // The entry point of any Electron application is its main script.
@@ -22,7 +22,7 @@ const createWindow = () =>
         webPreferences: {
             preload: path.join(__dirname, 'preload.js')
         }
-    })
+    });
 
     // Open the DevTools.
     //win.webContents.openDevTools();
@@ -39,10 +39,14 @@ const createWindow = () =>
             submenu: [
                 {
                     click: () => win.webContents.send('update-counter', 1),
+                    // Local keyboard shortcuts are triggered only when the application is focused.
+                    // To configure a local keyboard shortcut, you need to specify an accelerator property when creating a MenuItem within the Menu module.
+                    accelerator: process.platform === 'darwin' ? 'Alt+Cmd+I' : 'Alt+Shift+I',
                     label: 'Click to increment',
                 },
                 {
                     click: () => win.webContents.send('update-counter', -1),
+                    accelerator: process.platform === 'darwin' ? 'Alt+Cmd+D' : 'Alt+Shift+D',
                     label: 'Click to decrement',
                 }
             ]
@@ -93,13 +97,17 @@ app.whenReady().then(() =>
     // It only serves as a namespace that helps with code readability.
     ipcMain.handle('dialog:openFile', handleFileOpen)
 
-    createWindow()
-
     app.on('activate', () =>
     {
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
-})
+
+    globalShortcut.register('Alt+Shift+I', () =>
+    {
+        console.log('Electron loves global shortcuts!')
+    })
+
+}).then(createWindow)
 
 app.on('window-all-closed', () =>
 {
