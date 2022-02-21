@@ -48,15 +48,25 @@ const createWindow = () =>
             ]
         }
     ]);
+    Menu.setApplicationMenu(menu);
 
-    Menu.setApplicationMenu(menu)
+    const contents = win.webContents
+    // The Web Bluetooth API can be used to communicate with bluetooth devices.
+    // In order to use this API in Electron, developers will need to handle the select-bluetooth-device event on the webContents associated with the device request.
+    // This example demonstrates an Electron application that automatically selects the first available bluetooth device when the Test Bluetooth button is clicked.
+    contents.on('select-bluetooth-device', (event, deviceList, callback) =>
+    {
+        event.preventDefault();
+        if (deviceList && deviceList.length > 0)
+        {
+            callback(deviceList[0].deviceId);
+        }
+    });
 
     win.loadFile('index.html').then(() =>
     {
         console.log("index.html file loaded and this extra bit of code resolves the promise.")
     })
-
-    const contents = win.webContents
 }
 
 // Call this createWindow() function to open your window.

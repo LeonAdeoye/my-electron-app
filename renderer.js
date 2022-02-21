@@ -2,9 +2,9 @@
 
 // A common application for two-way IPC is calling a main process module from your renderer process code and waiting for a result. This can be done by using ipcRenderer.invoke paired with ipcMain.handle.
 
-const titleButton = document.getElementById('btn')
-const titleInput = document.getElementById('title')
-const filePathElement = document.getElementById('filePath')
+const titleButton = document.getElementById('btn');
+const titleInput = document.getElementById('title');
+const filePathElement = document.getElementById('filePath');
 
 titleButton.addEventListener('click', async () =>
 {
@@ -14,7 +14,7 @@ titleButton.addEventListener('click', async () =>
     const title = titleInput.value;
     filePathElement.innerText = filePath;
     window.myAPI.setTitle(title);
-})
+});
 
 // Finally, to make the values update in the HTML document, we'll add a few lines of DOM manipulation so that the value
 // of the #counter element is updated whenever we fire an update-counter event.
@@ -26,6 +26,17 @@ window.myAPI.onUpdateCounter((_event, value) =>
     const oldValue = Number(counter.innerText)
     const newValue = oldValue + value
     counter.innerText = newValue
-})
+});
+
+async function testBluetooth()
+{
+    const device = await navigator.bluetooth.requestDevice(
+    {
+        acceptAllDevices: true
+    })
+    document.getElementById('device-name').innerHTML = "Response device ID: " + `${device.id}`;
+}
+
+document.getElementById('bluetooth').addEventListener('click', testBluetooth)
 
 
