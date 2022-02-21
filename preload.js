@@ -33,6 +33,8 @@ contextBridge.exposeInMainWorld('myAPI', {
     // As an app developer, you need to choose which APIs to expose from your preload
     // script using the contextBridge API.
     setTitle: (title) => ipcRenderer.send('set-title', title),
+
+
     // A common application for two-way IPC is calling a main process module from your renderer process code
     // and waiting for a result. This can be done by using ipcRenderer.invoke paired with ipcMain.handle.
 

@@ -25,7 +25,7 @@ const createWindow = () =>
     })
 
     // Open the DevTools.
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
 
     win.loadFile('index.html').then(() =>
     {
@@ -34,14 +34,6 @@ const createWindow = () =>
 
     const contents = win.webContents
 }
-
-// handleSetTitle callback has two parameters: an IpcMainEvent structure and a title string.
-// Whenever a message comes through the set-title channel, this function will be called.
-function handleSetTitle(event, title)
-{
-    console.log("Set title to: " + title)
-}
-
 
 // Call this createWindow() function to open your window.
 // In Electron, browser windows can only be created after the app module's ready event is fired.
@@ -86,9 +78,25 @@ app.on('window-all-closed', () =>
 async function handleFileOpen()
 {
     const { canceled, filePaths } = await dialog.showOpenDialog()
-    if (canceled) {
+    // The return value is then returned as a Promise to the original invoke call.
+    if (canceled)
+    {
         return
-    } else {
+    }
+    else
+    {
         return filePaths[0]
     }
+}
+
+// handleSetTitle callback has two parameters: an IpcMainEvent structure and a title string.
+// Whenever a message comes through the set-title channel, this function will be called.
+// To set the title this function will find the BrowserWindow instance attached to the message sender
+// and use the win.setTitle API on it.
+function handleSetTitle(event, title)
+{
+    const webContents = event.sender
+    const win = BrowserWindow.fromWebContents(webContents)
+    win.setTitle(title)
+    console.log("Set title to: " + title)
 }
