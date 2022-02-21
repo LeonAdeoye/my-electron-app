@@ -16,4 +16,16 @@ titleButton.addEventListener('click', async () =>
     window.myAPI.setTitle(title);
 })
 
+// Finally, to make the values update in the HTML document, we'll add a few lines of DOM manipulation so that the value
+// of the #counter element is updated whenever we fire an update-counter event.
+const counter = document.getElementById('counter')
+// In the below code, we're passing in a callback to the window.electronAPI.onUpdateCounter function exposed from our preload script.
+// The second value parameter corresponds to the 1 or -1 we were passing in from the webContents.send call from the native menu.
+window.myAPI.onUpdateCounter((_event, value) =>
+{
+    const oldValue = Number(counter.innerText)
+    const newValue = oldValue + value
+    counter.innerText = newValue
+})
+
 

@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron')
 const path = require('path')
 
 // The entry point of any Electron application is its main script.
@@ -26,6 +26,30 @@ const createWindow = () =>
 
     // Open the DevTools.
     //win.webContents.openDevTools();
+
+    // When sending a message from the main process to a renderer process, you need to specify which renderer is receiving the message.
+    // Messages need to be sent to a renderer process via its WebContents instance.
+    // This WebContents instance contains a send method that can be used in the same way as ipcRenderer.send.
+    // First build a custom menu in the main process using Electron's Menu module that uses the webContents.send API
+    // to send an IPC message from the main process to the target renderer.
+    const menu = Menu.buildFromTemplate([
+        {
+            // The click handler sends a message (either 1 or -1) to the renderer process through the 'update-counter' channel.
+            label: "Counter menu - click to use",
+            submenu: [
+                {
+                    click: () => win.webContents.send('update-counter', 1),
+                    label: 'Click to increment',
+                },
+                {
+                    click: () => win.webContents.send('update-counter', -1),
+                    label: 'Click to decrement',
+                }
+            ]
+        }
+    ]);
+
+    Menu.setApplicationMenu(menu)
 
     win.loadFile('index.html').then(() =>
     {
