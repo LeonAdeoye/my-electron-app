@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu, globalShortcut } = require('electron')
+const { app, BrowserWindow, ipcMain, dialog, Menu, globalShortcut, Notification } = require('electron')
 const path = require('path')
 
 // The entry point of any Electron application is its main script.
@@ -8,6 +8,14 @@ const path = require('path')
 
 // The app module, which controls your application's event lifecycle.
 // The BrowserWindow module, which creates and manages application windows.
+
+const NOTIFICATION_TITLE = 'Basic Notification'
+const NOTIFICATION_BODY = 'Notification from the Main process'
+
+function showNotification ()
+{
+    new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
+}
 
 const createWindow = () =>
 {
@@ -87,6 +95,8 @@ const createWindow = () =>
 // for activate events after your app is initialized.
 // Do this by attaching your event listener from within your existing whenReady() callback.
 
+app.setAppUserModelId(process.execPath);
+
 app.whenReady().then(() =>
 {
     // Set an IPC listener on the set-title channel with the ipcMain.on API:
@@ -107,7 +117,7 @@ app.whenReady().then(() =>
         console.log('Electron loves global shortcuts!')
     })
 
-}).then(createWindow)
+}).then(createWindow).then(showNotification)
 
 app.on('window-all-closed', () =>
 {

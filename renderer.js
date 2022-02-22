@@ -6,6 +6,13 @@ const titleButton = document.getElementById('btn');
 const titleInput = document.getElementById('title');
 const filePathElement = document.getElementById('filePath');
 
+const NOTIFICATION_TITLE = 'Title'
+const NOTIFICATION_BODY = 'Notification from the Renderer process. Click to log to console.'
+const CLICK_MESSAGE = 'Notification clicked!'
+
+new Notification(NOTIFICATION_TITLE, { body: NOTIFICATION_BODY })
+    .onclick = () => document.getElementById("output").innerText = CLICK_MESSAGE;
+
 titleButton.addEventListener('click', async () =>
 {
     // In the above snippet, we listen for clicks on the #btn button, and call our window.electronAPI.openFile()
