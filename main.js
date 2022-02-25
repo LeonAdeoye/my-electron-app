@@ -12,6 +12,8 @@ const path = require('path')
 const NOTIFICATION_TITLE = 'Basic Notification'
 const NOTIFICATION_BODY = 'Notification from the Main process'
 
+let progressInterval
+
 function showNotification ()
 {
     new Notification({ title: NOTIFICATION_TITLE, body: NOTIFICATION_BODY }).show()
@@ -88,7 +90,27 @@ const createWindow = () =>
     {
         console.log("index.html file loaded and this extra bit of code resolves the promise.")
     })
+
+    const INCREMENT = 0.03
+    const INTERVAL_DELAY = 100 // ms
+
+    let counter = 0
+    progressInterval = setInterval(() =>
+    {
+        win.setProgressBar(counter)
+
+        if (counter < 2)
+            counter += INCREMENT
+        else
+            counter = (-INCREMENT * 5) // reset to a bit less than 0 to show reset state
+
+    }, INTERVAL_DELAY);
 }
+
+// before the app is terminated, clear both timers
+app.on('before-quit', () => {
+    clearInterval(progressInterval)
+})
 
 // Call this createWindow() function to open your window.
 // In Electron, browser windows can only be created after the app module's ready event is fired.
