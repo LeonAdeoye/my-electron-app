@@ -27,7 +27,16 @@ const createWindow = () =>
     {
         width: 800,
         height: 600,
-        webPreferences: {
+        titleBarStyle: 'hidden',
+        transparent: false,
+        titleBarOverlay:
+        {
+            color: '#2f3241',
+            symbolColor: '#74b1be'
+        },
+        frame: true, // Defaults to true but false removes the frame (with the top-level menu)
+        webPreferences:
+        {
             preload: path.join(__dirname, 'preload.js')
         }
     });
@@ -95,7 +104,7 @@ const createWindow = () =>
 // for activate events after your app is initialized.
 // Do this by attaching your event listener from within your existing whenReady() callback.
 
-app.setAppUserModelId(process.execPath);
+
 
 app.whenReady().then(() =>
 {
@@ -123,6 +132,8 @@ app.on('window-all-closed', () =>
 {
     if (process.platform !== 'darwin') app.quit()
 })
+
+app.setAppUserModelId(process.execPath);
 
 // In the main process, we'll be creating a handleFileOpen() function that calls dialog.showOpenDialog
 // and returns the value of the file path selected by the user. This function is used as a callback
