@@ -1,0 +1,11 @@
+body
+{
+    -webkit-app-region: drag;
+    background-color: aqua;
+}
+
+button
+{
+    -webkit-app-region: no-drag;
+}
+
