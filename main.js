@@ -29,8 +29,13 @@ const createWindow = () =>
     {
         width: 800,
         height: 600,
+        minWidth: 450,
+        minHeight: 500,
         titleBarStyle: 'hidden',
+        title: "Hello", // redundant
         transparent: false,
+        backgroundColor: '#9e7b8c', // Can also set in style sheet. Style sheet setting is commented out coz is has more importance.
+
         titleBarOverlay:
         {
             color: '#2f3241',
@@ -42,6 +47,19 @@ const createWindow = () =>
             preload: path.join(__dirname, 'preload.js')
         }
     });
+
+    const child = new BrowserWindow({
+        parent: win,
+        width: 300,
+        height: 200,
+        minWidth: 250,
+        minHeight: 100,
+        opacity: 0.95,
+        title: "This is a modal dialog",
+        modal:true,
+        backgroundColor: '#7e7474' // Can also set in style sheet. Style sheet seeting is commented out coz is has more importance.
+    })
+    child.show()
 
     // Open the DevTools.
     //win.webContents.openDevTools();
@@ -91,6 +109,11 @@ const createWindow = () =>
         console.log("index.html file loaded and this extra bit of code resolves the promise.")
     })
 
+    // win.once('ready-to-show', () =>
+    // {
+    //     win.show()
+    // })
+
     const INCREMENT = 0.03
     const INTERVAL_DELAY = 100 // ms
 
@@ -125,8 +148,6 @@ app.on('before-quit', () => {
 // Because windows cannot be created before the ready event, you should only listen
 // for activate events after your app is initialized.
 // Do this by attaching your event listener from within your existing whenReady() callback.
-
-
 
 app.whenReady().then(() =>
 {
